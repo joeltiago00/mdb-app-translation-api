@@ -1,0 +1,19 @@
+{
+  "name": "src",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "dev": "nodemon ./start.js"
+  },
+  "type": "module",
+  "author": "github.com/joeltiago00",
+  "dependencies": {
+    "bcrypt": "^5.0.1",
+    "dotenv": "^16.0.1",
+    "express": "^4.17.1",
+    "mongoose": "^6.5.2",
+    "nodemon": "^2.0.19",
+    "serverless-http": "^2.7.0",
+    "yup": "^0.32.11"
+  }
+}
