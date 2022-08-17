@@ -15,6 +15,7 @@
     "mongoose": "^6.5.2",
     "nodemon": "^2.0.19",
     "serverless-http": "^2.7.0",
+    "uuid": "^8.3.2",
     "yup": "^0.32.11"
   }
 }

@@ -1,9 +1,9 @@
 <!--
-title: 'Serverless Framework Node Express API on Mail'
-description: 'This template demonstrates how to develop and deploy a simple Node Express API running on Mail Lambda using the traditional Serverless Framework.'
+title: 'Serverless Framework Node Express API on UserMail'
+description: 'This template demonstrates how to develop and deploy a simple Node Express API running on UserMail Lambda using the traditional Serverless Framework.'
 layout: Doc
 framework: v3
-platform: Mail
+platform: UserMail
 language: nodeJS
 priority: 1
 authorLink: 'https://github.com/serverless'

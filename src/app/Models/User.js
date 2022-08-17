@@ -5,6 +5,11 @@ const User = mongoose.model('users', {
     email: String,
     password: String,
     role: String,
+    auth: {
+        first_login: Boolean,
+        token: String,
+        token_expires_at: Date
+    },
     created_at: Date,
     updated_at: Date,
     deleted_at: Date
