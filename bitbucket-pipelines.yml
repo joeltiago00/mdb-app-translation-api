@@ -1,0 +1,57 @@
+image: docker/compose:1.25.4
+pipelines:
+  custom:
+    Deploy Homologation Brazil:
+      - step:
+          name: Build Application
+          size: 2x
+          services:
+            - docker
+          caches:
+            - docker
+            - composer
+          script:
+            - docker-compose up -d --no-deps --build app
+#          artifacts:
+#            - src/vendor/**
+#            - src/bootstrap/cache/*.php
+#            - src/storage
+      - step:
+          name: Deploy
+          deployment: homologation-brasil
+          image: node:14.5.0-alpine
+          caches:
+            - node
+          script:
+            - mv .cd/serverless-hom.yml src/serverless.yml
+            - cd src/
+            - npm install -g serverless@2.7.0
+            - serverless config credentials --provider aws --key ${MY_AWS_ACCESS_KEY_ID} --secret ${MY_AWS_SECRET_ACCESS_KEY} -o
+            - serverless deploy
+    Deploy Production Brazil:
+      - step:
+          name: Build Application
+          size: 2x
+          services:
+            - docker
+          caches:
+            - docker
+            - composer
+          script:
+            - docker-compose up -d --no-deps --build app
+#          artifacts:
+#            - src/vendor/**
+#            - src/bootstrap/cache/*.php
+#            - src/storage
+      - step:
+          name: Deploy
+          deployment: production-brasil
+          image: node:14.5.0-alpine
+          caches:
+            - node
+          script:
+            - mv .cd/serverless-prod.yml src/serverless.yml
+            - cd src/
+            - npm install -g serverless@2.35.0
+            - serverless config credentials --provider aws --key ${MY_AWS_ACCESS_KEY_ID} --secret ${MY_AWS_SECRET_ACCESS_KEY} -o
+            - serverless deploy

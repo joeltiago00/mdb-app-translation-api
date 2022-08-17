@@ -1,0 +1,80 @@
+service: laravel
+
+frameworkVersion: '2'
+
+custom:
+  myLambdaHandlerName: mdb-translation-api-hom
+
+provider:
+  name: aws
+  stackName: ${self:custom.myLambdaHandlerName}-stack
+  httpApi:
+    name: ${self:custom.myLambdaHandlerName}-apigateway
+  region: ${env:MY_AWS_DEFAULT_REGION}
+  stage: hom
+  runtime: provided.al2
+  lambdaHashingVersion: 20201221
+  environment:
+    APP_NAME: "mdb-translation-api"
+    APP_ENV: "homologation"
+
+    DB_HOST: ${env:DB_HOST}
+    DB_PORT: ${env:DB_PORT}
+    DB_DATABASE: ${env:DB_DATABASE}
+    DB_USER: ${env:DB_USER}
+    DB_PASSWORD: ${env:DB_PASSWORD}
+
+    MY_AWS_SES_ACCESS_KEY_ID: ${env:MY_AWS_SES_ACCESS_KEY_ID}
+    MY_AWS_SES_SECRET_ACCESS_KEY: ${env:MY_AWS_SES_SECRET_ACCESS_KEY}
+    MY_AWS_SES_DEFAULT_REGION: ${env:MY_AWS_SES_DEFAULT_REGION}
+
+  #    APP_STORAGE: "tmp/storage"
+  iamRoleStatements:
+    - Effect: Allow
+      Action: s3:*
+      Resource:
+        - !Sub "${Storage.Arn}"
+        - !Sub "${Storage.Arn}/*"
+
+package:
+  exclude:
+    - node_modules/**
+    - public/storage
+    - resources/assets/**
+    - tests/**
+  patterns:
+    - '!storage/**'
+    - 'storage/private.key'
+    - 'storage/public.key'
+
+
+plugins:
+  - ./vendor/bref/bref
+
+functions:
+  web:
+    handler: public/index.php
+    name: ${self:custom.myLambdaHandlerName}-web
+    timeout: 28
+    layers:
+      - ${bref:layer.php-81-fpm}
+    events:
+      - httpApi: "*"
+  artisan:
+    handler: artisan
+    name: ${self:custom.myLambdaHandlerName}-artisan
+    timeout: 120
+    layers:
+      - ${bref:layer.php-81}
+      - ${bref:layer.console}
+    events:
+      - schedule:
+          rate: rate(2 minutes)
+          input: '"integration:payment-application-v2"'
+
+resources:
+  Resources:
+    Storage:
+      Type: AWS::S3::Bucket
+      Properties:
+        BucketName: "mdb-translation-api-hom"
