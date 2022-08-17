@@ -8,6 +8,7 @@
   "type": "module",
   "author": "github.com/joeltiago00",
   "dependencies": {
+    "aws-sdk": "^2.1196.0",
     "bcrypt": "^5.0.1",
     "dotenv": "^16.0.1",
     "express": "^4.17.1",
